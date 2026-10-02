@@ -1,3 +1,324 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual Digital de Moderación y Protocolos</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .active-nav-item {
+            background-color: rgba(59, 130, 246, 0.1);
+            color: #2563eb;
+            border-left: 4px solid #2563eb;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col">
+
+    <!-- Barra de Progreso Superior -->
+    <div class="fixed top-0 left-0 w-full h-1 bg-slate-200 z-50">
+        <div id="scroll-progress" class="h-full bg-blue-600 w-0 transition-all duration-150"></div>
+    </div>
+
+    <!-- Navegación Superior (Header) -->
+    <header class="sticky top-0 bg-white border-b border-slate-200 z-40 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <button id="mobile-menu-btn" class="lg:hidden p-2 text-slate-600 hover:text-slate-900 focus:outline-none">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+                <div class="flex items-center space-x-2">
+                    <div class="w-9 h-9 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold text-lg">
+                        M
+                    </div>
+                    <div>
+                        <h1 class="text-base font-bold text-slate-900 leading-none">Manual de Moderación</h1>
+                        <span class="text-xs text-slate-500 font-medium">Guía Operativa & Protocolos</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Buscador Integrado -->
+            <div class="relative w-64 md:w-80">
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                <input type="text" id="search-input" placeholder="Buscar normas, temas o flujos..." 
+                       class="w-full pl-9 pr-4 py-2 bg-slate-100 border border-transparent rounded-lg text-sm text-slate-900 focus:outline-none focus:bg-white focus:border-blue-500 transition-all">
+            </div>
+        </div>
+    </header>
+
+    <div class="flex-1 max-w-7xl w-full mx-auto flex">
+        <!-- Menú Lateral (Sidebar) -->
+        <aside id="sidebar" class="fixed lg:sticky top-16 left-0 h-[calc(100vh-4rem)] w-64 bg-white border-r border-slate-200 p-4 transform -translate-x-full lg:translate-x-0 transition-transform duration-200 ease-in-out z-30 overflow-y-auto">
+            <nav class="space-y-1">
+                <div class="px-3 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                    Contenido
+                </div>
+                <a href="#introduccion" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm text-slate-600 hover:bg-slate-100 transition-colors">
+                    <i class="fa-solid fa-book-open w-5 text-center"></i>
+                    <span>1. Introducción</span>
+                </a>
+                <a href="#codigo-conducta" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm text-slate-600 hover:bg-slate-100 transition-colors">
+                    <i class="fa-solid fa-shield-halved w-5 text-center"></i>
+                    <span>2. Código de Conducta</span>
+                </a>
+                <a href="#normas" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm text-slate-600 hover:bg-slate-100 transition-colors">
+                    <i class="fa-solid fa-list-check w-5 text-center"></i>
+                    <span>3. Normas de Moderación</span>
+                </a>
+                <a href="#flujos" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm text-slate-600 hover:bg-slate-100 transition-colors">
+                    <i class="fa-solid fa-diagram-project w-5 text-center"></i>
+                    <span>4. Flujos de Trabajo</span>
+                </a>
+                <a href="#plantillas" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm text-slate-600 hover:bg-slate-100 transition-colors">
+                    <i class="fa-solid fa-copy w-5 text-center"></i>
+                    <span>5. Plantillas de Respuesta</span>
+                </a>
+                <a href="#escalacion" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm text-slate-600 hover:bg-slate-100 transition-colors">
+                    <i class="fa-solid fa-triangle-exclamation w-5 text-center"></i>
+                    <span>6. Escalación de Casos</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Contenido Principal -->
+        <main class="flex-1 p-6 md:p-10 max-w-4xl space-y-12">
+
+            <!-- Sección 1: Introducción -->
+            <section id="introduccion" class="space-y-4">
+                <div class="border-b border-slate-200 pb-4">
+                    <span class="text-xs font-semibold uppercase tracking-wider text-blue-600">Sección 01</span>
+                    <h2 class="text-2xl md:text-3xl font-bold text-slate-900 mt-1">Introducción y Objetivos</h2>
+                </div>
+                <p class="text-slate-600 leading-relaxed">
+                    Este manual establece los principios fundamentales y las directrices operativas para el equipo de moderación. El objetivo principal es garantizar una comunidad segura, respetuosa y constructiva, manteniendo criterios uniformes y objetivos en la toma de decisiones.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                        <i class="fa-solid fa-scale-balanced text-blue-600 text-xl mb-2"></i>
+                        <h3 class="font-semibold text-slate-900 text-sm">Imparcialidad</h3>
+                        <p class="text-xs text-slate-500 mt-1">Evaluar cada reporte sin sesgos ni favoritismos personales.</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                        <i class="fa-solid fa-bolt text-blue-600 text-xl mb-2"></i>
+                        <h3 class="font-semibold text-slate-900 text-sm">Eficiencia</h3>
+                        <p class="text-xs text-slate-500 mt-1">Resolver incidencias dentro del tiempo de respuesta objetivo.</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                        <i class="fa-solid fa-eye text-blue-600 text-xl mb-2"></i>
+                        <h3 class="font-semibold text-slate-900 text-sm">Transparencia</h3>
+                        <p class="text-xs text-slate-500 mt-1">Comunicar las sanciones con claridad y fundamento en las normas.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sección 2: Código de Conducta -->
+            <section id="codigo-conducta" class="space-y-4">
+                <div class="border-b border-slate-200 pb-4">
+                    <span class="text-xs font-semibold uppercase tracking-wider text-blue-600">Sección 02</span>
+                    <h2 class="text-2xl md:text-3xl font-bold text-slate-900 mt-1">Código de Conducta</h2>
+                </div>
+                <p class="text-slate-600 leading-relaxed">
+                    Todos los miembros de la comunidad deben adherirse a los siguientes pilares de convivencia. El incumplimiento de cualquiera de estas pautas dará lugar a acciones de moderación.
+                </p>
+                <ul class="space-y-3 pt-2">
+                    <li class="flex items-start space-x-3 bg-white p-4 rounded-xl border border-slate-200">
+                        <i class="fa-solid fa-circle-check text-green-500 mt-1"></i>
+                        <div>
+                            <strong class="text-slate-900 text-sm block">Respeto Mutuo</strong>
+                            <span class="text-xs text-slate-500">Se permiten los debates intensos, pero no los ataques personales, ofensas ni descalificaciones.</span>
+                        </div>
+                    </li>
+                    <li class="flex items-start space-x-3 bg-white p-4 rounded-xl border border-slate-200">
+                        <i class="fa-solid fa-circle-check text-green-500 mt-1"></i>
+                        <div>
+                            <strong class="text-slate-900 text-sm block">Privacidad y Seguridad</strong>
+                            <span class="text-xs text-slate-500">Prohibida la divulgación de información personal no pública (doxxing) de cualquier usuario.</span>
+                        </div>
+                    </li>
+                    <li class="flex items-start space-x-3 bg-white p-4 rounded-xl border border-slate-200">
+                        <i class="fa-solid fa-circle-check text-green-500 mt-1"></i>
+                        <div>
+                            <strong class="text-slate-900 text-sm block">Veracidad e Integridad</strong>
+                            <span class="text-xs text-slate-500">No difundir desinformación deliberada ni utilizar cuentas múltiples para manipular conversaciones.</span>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Sección 3: Normas de Moderación -->
+            <section id="normas" class="space-y-6">
+                <div class="border-b border-slate-200 pb-4">
+                    <span class="text-xs font-semibold uppercase tracking-wider text-blue-600">Sección 03</span>
+                    <h2 class="text-2xl md:text-3xl font-bold text-slate-900 mt-1">Catálogo de Normas</h2>
+                </div>
+
+                <!-- Norma 01 -->
+                <div id="norma-01" class="bg-white rounded-xl border border-slate-200 p-6 space-y-3 shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold px-2.5 py-1 bg-amber-100 text-amber-800 rounded-full">Gravedad: Media</span>
+                        <span class="text-xs text-slate-400 font-mono">NORMA-01</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900">Spam y Promoción No Autorizada</h3>
+                    <p class="text-sm text-slate-600">
+                        Publicación repetitiva de enlaces comerciales, publicidad no solicitada o flooding de mensajes idénticos en múltiples hilos.
+                    </p>
+                    <div class="bg-slate-50 p-3 rounded-lg border border-slate-100 text-xs text-slate-500 space-y-1">
+                        <div><strong>Acción recomendada:</strong> Eliminación del contenido + Advertencia inicial.</div>
+                        <div><strong>Reincidencia:</strong> Suspensión temporal por 48 horas.</div>
+                    </div>
+                </div>
+
+                <!-- Norma 02 -->
+                <div id="norma-02" class="bg-white rounded-xl border border-slate-200 p-6 space-y-3 shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold px-2.5 py-1 bg-red-100 text-red-800 rounded-full">Gravedad: Alta</span>
+                        <span class="text-xs text-slate-400 font-mono">NORMA-02</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900">Acoso y Discurso de Odio</h3>
+                    <p class="text-sm text-slate-600">
+                        Ataques directos, hostigamiento sistemático, o incitación al odio por motivos de raza, género, religión, orientación u origen.
+                    </p>
+                    <div class="bg-slate-50 p-3 rounded-lg border border-slate-100 text-xs text-slate-500 space-y-1">
+                        <div><strong>Acción recomendada:</strong> Eliminación inmediata + Suspensión temporal de 7 días.</div>
+                        <div><strong>Reincidencia:</strong> Bloqueo permanente de la cuenta.</div>
+                    </div>
+                </div>
+
+                <!-- Norma 03 -->
+                <div id="norma-03" class="bg-white rounded-xl border border-slate-200 p-6 space-y-3 shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold px-2.5 py-1 bg-red-100 text-red-800 rounded-full">Gravedad: Crítica</span>
+                        <span class="text-xs text-slate-400 font-mono">NORMA-03</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900">Contenido Explícito o Ilegal</h3>
+                    <p class="text-sm text-slate-600">
+                        Imágenes o videos sin consentimiento, pornografía no clasificada, promoción de actividades ilegales o violencia gráfica extrema.
+                    </p>
+                    <div class="bg-slate-50 p-3 rounded-lg border border-slate-100 text-xs text-slate-500 space-y-1">
+                        <div><strong>Acción recomendada:</strong> Eliminación inmediata + Ban permanente directo.</div>
+                        <div><strong>Escalación:</strong> Reportar a administración si involucra riesgos legales.</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sección 4: Flujos de Trabajo -->
+            <section id="flujos" class="space-y-6">
+                <div class="border-b border-slate-200 pb-4">
+                    <span class="text-xs font-semibold uppercase tracking-wider text-blue-600">Sección 04</span>
+                    <h2 class="text-2xl md:text-3xl font-bold text-slate-900 mt-1">Flujos de Trabajo Operativos</h2>
+                </div>
+
+                <div id="flujo-reporte" class="space-y-4">
+                    <h3 class="text-lg font-bold text-slate-900">Protocolo de Procesamiento de Reportes</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-start space-x-4 bg-white p-4 rounded-xl border border-slate-200">
+                            <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm shrink-0">1</div>
+                            <div>
+                                <h4 class="font-semibold text-slate-900 text-sm">Recepción y Triaje</h4>
+                                <p class="text-xs text-slate-500 mt-0.5">Clasificar el reporte según el nivel de urgencia y gravedad de la supuesta infracción.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-4 bg-white p-4 rounded-xl border border-slate-200">
+                            <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm shrink-0">2</div>
+                            <div>
+                                <h4 class="font-semibold text-slate-900 text-sm">Evaluación del Contexto</h4>
+                                <p class="text-xs text-slate-500 mt-0.5">Revisar el historial del usuario sancionado y comprobar la evidencia aportada por el reporte.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-4 bg-white p-4 rounded-xl border border-slate-200">
+                            <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm shrink-0">3</div>
+                            <div>
+                                <h4 class="font-semibold text-slate-900 text-sm">Ejecución de la Medida</h4>
+                                <p class="text-xs text-slate-500 mt-0.5">Aplicar la sanción correspondiente en el panel y enviar la notificación con la plantilla oficial.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sección 5: Plantillas de Respuesta -->
+            <section id="plantillas" class="space-y-6">
+                <div class="border-b border-slate-200 pb-4">
+                    <span class="text-xs font-semibold uppercase tracking-wider text-blue-600">Sección 05</span>
+                    <h2 class="text-2xl md:text-3xl font-bold text-slate-900 mt-1">Plantillas de Respuesta</h2>
+                </div>
+                <p class="text-slate-600 text-sm">
+                    Utiliza los siguientes modelos prediseñados para comunicarte con los usuarios afectados. Haz clic en el botón de copiar para llevar la plantilla al portapapeles.
+                </p>
+
+                <!-- Plantilla 1 -->
+                <div class="bg-white rounded-xl border border-slate-200 p-5 space-y-3 shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-slate-700">Advertencia por Spam</span>
+                        <button onclick="copyTemplate('template-spam')" class="text-xs px-3 py-1.5 bg-blue-50 text-blue-600 hover:bg-blue-100 font-semibold rounded-lg transition-colors flex items-center space-x-1">
+                            <i class="fa-regular fa-copy"></i>
+                            <span>Copiar</span>
+                        </button>
+                    </div>
+                    <div id="template-spam" class="bg-slate-50 p-4 rounded-lg border border-slate-200 font-mono text-xs text-slate-700 whitespace-pre-wrap">Hola [Nombre_Usuario]:
+
+Tu contenido publicado recientemente en [Enlace/Sección] ha sido retirado por incumplir la NORMA-01 (Spam y Promoción No Autorizada).
+
+Por favor, revisa nuestro Código de Conducta antes de continuar participando. La reincidencia en este comportamiento podría acarrear la suspensión temporal de tu cuenta.
+
+Atentamente,
+El Equipo de Moderación</div>
+                </div>
+
+                <!-- Plantilla 2 -->
+                <div class="bg-white rounded-xl border border-slate-200 p-5 space-y-3 shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-slate-700">Notificación de Suspensión Temporal</span>
+                        <button onclick="copyTemplate('template-ban')" class="text-xs px-3 py-1.5 bg-blue-50 text-blue-600 hover:bg-blue-100 font-semibold rounded-lg transition-colors flex items-center space-x-1">
+                            <i class="fa-regular fa-copy"></i>
+                            <span>Copiar</span>
+                        </button>
+                    </div>
+                    <div id="template-ban" class="bg-slate-50 p-4 rounded-lg border border-slate-200 font-mono text-xs text-slate-700 whitespace-pre-wrap">Estimado/a [Nombre_Usuario]:
+
+Te informamos que tu cuenta ha sido suspendida temporalmente por un periodo de [X] días debido a una infracción grave de la NORMA-02 (Acoso y Discurso de Odio).
+
+Tu acceso será restablecido el [Fecha_Restablecimiento]. Si consideras que esto ha sido un error, puedes presentar una apelación respondiendo a este mensaje.
+
+Atentamente,
+El Equipo de Moderación</div>
+                </div>
+            </section>
+
+            <!-- Sección 6: Escalación de Casos -->
+            <section id="escalacion" class="space-y-4 pb-12">
+                <div class="border-b border-slate-200 pb-4">
+                    <span class="text-xs font-semibold uppercase tracking-wider text-blue-600">Sección 06</span>
+                    <h2 class="text-2xl md:text-3xl font-bold text-slate-900 mt-1">Escalación y Casos Especiales</h2>
+           </div>
+                <div class="bg-amber-50 border border-amber-200 rounded-xl p-5 text-amber-900 space-y-2">
+                    <div class="flex items-center space-x-2 font-bold text-sm">
+                        <i class="fa-solid fa-triangle-exclamation text-amber-600"></i>
+                        <span>¿Cuándo escalar un caso al Supervisor?</span>
+                    </div>
+                    <ul class="list-disc list-inside text-xs space-y-1 text-amber-800">
+                        <li>Dudas sobre la interpretación de normas en casos fronterizos o ambiguos.</li>
+                        <li>Usuarios de perfil alto o verificado involucrados en disputas complejas.</li>
+                        <li>Riesgos de seguridad real, amenazas legales o vulneraciones graves de privacidad.</li>
+                        <li>Apelaciones reiteradas de sanciones permanentes.</li>
+                    </ul>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Notificación Flotante (Toast) -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 text-white px-4 py-3 rounded-xl shadow-xl flex items-center space-x-3 transition-all duration-300 transform translate-y-20 opacity-0 pointer-events-none z-50">
+        <i class="fa-solid fa-circle-check text-green-400"></i>
+        <span id="toast-message" class="text-sm font-medium">Notificación</span>
+    </div>
+
+    <!-- Scripts de Interactividad -->
     <script>
         // 1. Barra de progreso de lectura al hacer scroll
         window.addEventListener('scroll', () => {
