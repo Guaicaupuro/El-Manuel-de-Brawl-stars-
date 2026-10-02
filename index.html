@@ -1,110 +1,128 @@
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // 1. Indicador de progreso de lectura (Scroll Progress Bar)
-            window.addEventListener('scroll', () => {
-                const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
-                const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-                const scrolled = (winScroll / height) * 100;
-                const progressBar = document.getElementById('scroll-progress');
-                if (progressBar) {
-                    progressBar.style.width = scrolled + '%';
+        // 1. Barra de progreso de lectura al hacer scroll
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            const progressBar = document.getElementById('scroll-progress');
+            if (progressBar) {
+                progressBar.style.width = scrolled + '%';
+            }
+        });
+
+        // 2. Control del menú lateral en dispositivos móviles
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const sidebar = document.getElementById('sidebar');
+
+        if (mobileMenuBtn && sidebar) {
+            mobileMenuBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                sidebar.classList.toggle('-translate-x-full');
+            });
+
+            // Cerrar el menú móvil al hacer clic fuera
+            document.addEventListener('click', (e) => {
+                if (!sidebar.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+                    sidebar.classList.add('-translate-x-full');
                 }
             });
 
-            // 2. Toggle del Menú Lateral para Dispositivos Móviles
-            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-            const sidebar = document.getElementById('sidebar');
-
-            if (mobileMenuBtn && sidebar) {
-                mobileMenuBtn.addEventListener('click', () => {
-                    sidebar.classList.toggle('-translate-x-full');
-                });
-
-                // Cerrar el menú al hacer clic en un enlace (en móvil)
-                document.querySelectorAll('.nav-item').forEach(link => {
-                    link.addEventListener('click', () => {
-                        if (window.innerWidth < 1024) {
-                            sidebar.classList.add('-translate-x-full');
-                        }
-                    });
-                });
-            }
-
-            // 3. Buscador en Tiempo Real (Filtra normas, secciones y palabras clave)
-            const searchInput = document.getElementById('search-input');
-            if (searchInput) {
-                searchInput.addEventListener('input', (e) => {
-                    const query = e.target.value.toLowerCase().trim();
-                    const searchableElements = document.querySelectorAll('section, [id^="norma-"], [id^="flujo-"]');
-
-                    searchableElements.forEach(el => {
-                        const text = el.textContent.toLowerCase();
-                        if (query === '' || text.includes(query)) {
-                            el.style.display = '';
-                        } else {
-                            el.style.display = 'none';
-                        }
-                    });
-                });
-            }
-
-            // 4. Resaltado Dinámico del Índice Lateral (Intersection Observer)
-            const observerOptions = {
-                root: null,
-                rootMargin: '-20% 0px -60% 0px',
-                threshold: 0
-            };
-
-            const navLinks = document.querySelectorAll('.nav-item');
-            const sections = document.querySelectorAll('section[id], [id^="norma-"], [id^="flujo-"], #tabla-infracciones');
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const activeId = entry.target.getAttribute('id');
-                        navLinks.forEach(link => {
-                            if (link.getAttribute('href') === `#${activeId}`) {
-                                link.classList.add('active-nav-item');
-                            } else {
-                                link.classList.remove('active-nav-item');
-                            }
-                        });
+            // Cerrar menú móvil al hacer clic en un enlace de navegación
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    if (window.innerWidth < 1024) {
+                        sidebar.classList.add('-translate-x-full');
                     }
                 });
-            }, observerOptions);
+            });
+        }
 
-            sections.forEach(section => observer.observe(section));
-        });
-
-        // 5. Función para Copiar Plantillas al Portapapeles
-        function copyTemplate(templateId) {
-            const templateElement = document.getElementById(templateId);
+        // 3. Función para copiar plantillas de texto al portapapeles
+        function copyTemplate(elementId) {
+            const templateElement = document.getElementById(elementId);
             if (!templateElement) return;
 
             const textToCopy = templateElement.innerText;
 
             navigator.clipboard.writeText(textToCopy).then(() => {
-                showToast('Plantilla copiada al portapapeles');
+                showToast('Plantilla copiada al portapapeles con éxito');
             }).catch(err => {
-                console.error('Error al copiar el texto: ', err);
-                showToast('Error al copiar la plantilla');
+                // Alternativa para navegadores que restringen el portapapeles
+                const textarea = document.createElement('textarea');
+                textarea.value = textToCopy;
+                document.body.appendChild(textarea);
+                textarea.select();
+                try {
+                    document.execCommand('copy');
+                    showToast('Plantilla copiada al portapapeles');
+                } catch (e) {
+                    showToast('Error al copiar el texto');
+                }
+                document.body.removeChild(textarea);
             });
         }
 
-        // 6. Notificación Flotante (Toast)
+        // 4. Notificación emergente (Toast)
         function showToast(message) {
             const toast = document.getElementById('toast');
             const toastMessage = document.getElementById('toast-message');
-
+            
             if (toast && toastMessage) {
-                toastMessage.textContent = message;
+                toastMessage.innerText = message;
                 toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+                toast.classList.add('translate-y-0', 'opacity-100');
 
                 setTimeout(() => {
+                    toast.classList.remove('translate-y-0', 'opacity-100');
                     toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
                 }, 3000);
             }
         }
+
+        // 5. Buscador en tiempo real de normas y secciones
+        const searchInput = document.getElementById('search-input');
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase().trim();
+                const searchableElements = document.querySelectorAll('main section, main [id^="norma-"], main [id^="flujo-"]');
+
+                searchableElements.forEach(element => {
+                    const content = element.innerText.toLowerCase();
+                    if (term === '' || content.includes(term)) {
+                        element.style.display = '';
+                    } else {
+                        element.style.display = 'none';
+                    }
+                });
+            });
+        }
+
+        // 6. Resaltado automático de la sección activa en el Índice (IntersectionObserver)
+        const observerOptions = {
+            root: null,
+            rootMargin: '-20% 0px -70% 0px',
+            threshold: 0
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.getAttribute('id');
+                    document.querySelectorAll('.nav-item').forEach(link => {
+                        const href = link.getAttribute('href');
+                        if (href === `#${id}`) {
+                            link.classList.add('active-nav-item');
+                        } else {
+                            link.classList.remove('active-nav-item');
+                        }
+                    });
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('section[id], div[id^="norma-"], div[id^="flujo-"]').forEach(section => {
+            observer.observe(section);
+        });
     </script>
 </body>
 </html>
