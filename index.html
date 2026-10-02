@@ -1,314 +1,110 @@
-<!DOCTYPE html>
-<html lang="es" class="scroll-smooth">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manual de Moderación - Brawl Stars King's</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous"></script>
-
     <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        discord: {
-                            bg: '#0f172a',
-                            card: '#1e293b',
-                            border: '#334155',
-                            accent: '#5865F2',
-                            gold: '#fbbf24',
-                            crown: '#f59e0b'
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'monospace']
-                    }
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Indicador de progreso de lectura (Scroll Progress Bar)
+            window.addEventListener('scroll', () => {
+                const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+                const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                const scrolled = (winScroll / height) * 100;
+                const progressBar = document.getElementById('scroll-progress');
+                if (progressBar) {
+                    progressBar.style.width = scrolled + '%';
                 }
+            });
+
+            // 2. Toggle del Menú Lateral para Dispositivos Móviles
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const sidebar = document.getElementById('sidebar');
+
+            if (mobileMenuBtn && sidebar) {
+                mobileMenuBtn.addEventListener('click', () => {
+                    sidebar.classList.toggle('-translate-x-full');
+                });
+
+                // Cerrar el menú al hacer clic en un enlace (en móvil)
+                document.querySelectorAll('.nav-item').forEach(link => {
+                    link.addEventListener('click', () => {
+                        if (window.innerWidth < 1024) {
+                            sidebar.classList.add('-translate-x-full');
+                        }
+                    });
+                });
+            }
+
+            // 3. Buscador en Tiempo Real (Filtra normas, secciones y palabras clave)
+            const searchInput = document.getElementById('search-input');
+            if (searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    const query = e.target.value.toLowerCase().trim();
+                    const searchableElements = document.querySelectorAll('section, [id^="norma-"], [id^="flujo-"]');
+
+                    searchableElements.forEach(el => {
+                        const text = el.textContent.toLowerCase();
+                        if (query === '' || text.includes(query)) {
+                            el.style.display = '';
+                        } else {
+                            el.style.display = 'none';
+                        }
+                    });
+                });
+            }
+
+            // 4. Resaltado Dinámico del Índice Lateral (Intersection Observer)
+            const observerOptions = {
+                root: null,
+                rootMargin: '-20% 0px -60% 0px',
+                threshold: 0
+            };
+
+            const navLinks = document.querySelectorAll('.nav-item');
+            const sections = document.querySelectorAll('section[id], [id^="norma-"], [id^="flujo-"], #tabla-infracciones');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const activeId = entry.target.getAttribute('id');
+                        navLinks.forEach(link => {
+                            if (link.getAttribute('href') === `#${activeId}`) {
+                                link.classList.add('active-nav-item');
+                            } else {
+                                link.classList.remove('active-nav-item');
+                            }
+                        });
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(section => observer.observe(section));
+        });
+
+        // 5. Función para Copiar Plantillas al Portapapeles
+        function copyTemplate(templateId) {
+            const templateElement = document.getElementById(templateId);
+            if (!templateElement) return;
+
+            const textToCopy = templateElement.innerText;
+
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                showToast('Plantilla copiada al portapapeles');
+            }).catch(err => {
+                console.error('Error al copiar el texto: ', err);
+                showToast('Error al copiar la plantilla');
+            });
+        }
+
+        // 6. Notificación Flotante (Toast)
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toast-message');
+
+            if (toast && toastMessage) {
+                toastMessage.textContent = message;
+                toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+
+                setTimeout(() => {
+                    toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+                }, 3000);
             }
         }
     </script>
-    <style>
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0f172a;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #334155;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #475569;
-        }
-
-        .active-nav-item {
-            background-color: rgba(88, 101, 242, 0.15);
-            color: #fbbf24;
-            border-left: 4px solid #f59e0b;
-        }
-
-        .glass-header {
-            background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(12px);
-        }
-
-        /* Flowchart styling */
-        .flow-connector {
-            position: relative;
-        }
-        .flow-connector::after {
-            content: '';
-            position: absolute;
-            left: 50%;
-            bottom: -20px;
-            width: 2px;
-            height: 20px;
-            background: #475569;
-            transform: translateX(-50%);
-        }
-        .flow-connector-horizontal::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            right: -20px;
-            width: 20px;
-            height: 2px;
-            background: #475569;
-            transform: translateY(-50%);
-        }
-    </style>
-</head>
-<body class="bg-slate-950 text-slate-100 font-sans antialiased selection:bg-amber-500 selection:text-slate-950 min-h-screen flex flex-col">
-
-    <!-- Top Progress Indicator -->
-    <div class="fixed top-0 left-0 w-full h-1 bg-slate-800 z-50">
-        <div id="scroll-progress" class="h-full bg-gradient-to-r from-amber-500 via-yellow-400 to-indigo-500 w-0 transition-all duration-150"></div>
-    </div>
-
-    <!-- Sticky Header -->
-    <header class="sticky top-0 z-40 glass-header border-b border-slate-800 px-4 lg:px-8 py-3 transition-all">
-        <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-yellow-300 p-0.5 shadow-lg shadow-amber-500/20 flex items-center justify-center">
-                    <div class="w-full h-full bg-slate-900 rounded-[10px] flex items-center justify-center">
-                        <i class="fa-solid font-black fa-crown text-amber-400 text-lg"></i>
-                    </div>
-                </div>
-                <div>
-                    <div class="flex items-center gap-2">
-                        <h1 class="font-extrabold text-base md:text-lg tracking-tight text-slate-100">Brawl Stars King's</h1>
-                        <span class="bg-indigo-500/20 text-indigo-400 text-xs font-semibold px-2 py-0.5 rounded-full border border-indigo-500/30 flex items-center gap-1">
-                            <i class="fa-brands fa-discord"></i> Discord
-                        </span>
-                    </div>
-                    <p class="text-xs text-slate-400 font-medium">Manual de Moderación y Protocolo de Convivencia</p>
-                </div>
-            </div>
-
-            <div class="flex items-center gap-2 md:gap-3">
-                <!-- Search Input -->
-                <div class="relative hidden sm:block w-48 md:w-64">
-                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                    <input type="text" id="search-input" placeholder="Buscar normas, canales..." 
-                        class="w-full bg-slate-900 border border-slate-800 text-xs text-slate-200 rounded-lg pl-8 pr-3 py-2 focus:outline-none focus:border-amber-500/50 transition">
-                </div>
-
-                <!-- Mobile menu button -->
-                <button id="mobile-menu-btn" class="lg:hidden p-2 text-slate-300 hover:text-white bg-slate-900 rounded-lg border border-slate-800">
-                    <i class="fa-solid fa-bars text-lg"></i>
-                </button>
-            </div>
-        </div>
-    </header>
-
-    <div class="max-w-7xl mx-auto px-4 lg:px-8 py-6 flex-1 flex gap-8 w-full relative">
-
-        <!-- Interactive Sidebar Navigation -->
-        <aside id="sidebar" class="fixed lg:sticky top-20 left-0 z-30 w-72 h-[calc(100vh-6rem)] bg-slate-900/95 lg:bg-transparent border-r lg:border-r-0 border-slate-800 p-4 lg:p-0 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 overflow-y-auto flex-shrink-0">
-            <div class="bg-slate-900/80 lg:bg-slate-900 border border-slate-800/80 rounded-2xl p-4 shadow-xl">
-                <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-800">
-                    <span class="text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center gap-2">
-                        <i class="fa-solid fa-list-ul"></i> Índice Interactivo
-                    </span>
-                    <span class="text-[10px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded font-mono">v1.0</span>
-                </div>
-
-                <nav class="space-y-1 text-xs">
-                    <a href="#seccion-1" class="nav-item flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800/70 transition group">
-                        <i class="fa-solid fa-shield-halved text-amber-400 group-hover:scale-110 transition-transform"></i>
-                        <span class="font-medium">Sección 1: Identidad</span>
-                    </a>
-                    
-                    <a href="#seccion-2" class="nav-item flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800/70 transition group">
-                        <i class="fa-solid fa-gavel text-amber-400 group-hover:scale-110 transition-transform"></i>
-                        <span class="font-medium">Sección 2: Normas</span>
-                    </a>
-
-                    <div class="pl-7 space-y-1 my-1 border-l border-slate-800 ml-3">
-                        <a href="#norma-1" class="nav-item block py-1 px-2 rounded text-slate-400 hover:text-amber-300 truncate">1. LFG y Voz</a>
-                        <a href="#norma-2" class="nav-item block py-1 px-2 rounded text-slate-400 hover:text-amber-300 truncate">2. Torneos Internos</a>
-                        <a href="#norma-3" class="nav-item block py-1 px-2 rounded text-slate-400 hover:text-amber-300 truncate">3. Canales Temáticos</a>
-                        <a href="#norma-4" class="nav-item block py-1 px-2 rounded text-slate-400 hover:text-amber-300 truncate">4. Venta / Gemas</a>
-                        <a href="#norma-5" class="nav-item block py-1 px-2 rounded text-slate-400 hover:text-amber-300 truncate">5. Discriminación</a>
-                        <a href="#norma-6" class="nav-item block py-1 px-2 rounded text-slate-400 hover:text-amber-300 truncate">6. Spam / Promo</a>
-                    </div>
-
-                    <a href="#tabla-infracciones" class="nav-item flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800/70 transition group">
-                        <i class="fa-solid fa-table-list text-amber-400 group-hover:scale-110 transition-transform"></i>
-                        <span class="font-medium">Niveles de Infracción</span>
-                    </a>
-
-                    <a href="#seccion-3" class="nav-item flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800/70 transition group">
-                        <i class="fa-solid fa-diagram-project text-amber-400 group-hover:scale-110 transition-transform"></i>
-                        <span class="font-medium">Sección 3: Flujos</span>
-                    </a>
-
-                    <div class="pl-7 space-y-1 my-1 border-l border-slate-800 ml-3">
-                        <a href="#flujo-1" class="nav-item block py-1 px-2 rounded text-slate-400 hover:text-amber-300 truncate">Flujo 1: Miembros Nuevos</a>
-                        <a href="#flujo-2" class="nav-item block py-1 px-2 rounded text-slate-400 hover:text-amber-300 truncate">Flujo 2: Mediación Conflictos</a>
-                        <a href="#flujo-3" class="nav-item block py-1 px-2 rounded text-slate-400 hover:text-amber-300 truncate">Flujo 3: Crisis / Raids</a>
-                    </div>
-
-                    <a href="#seccion-4" class="nav-item flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800/70 transition group">
-                        <i class="fa-solid fa-copy text-amber-400 group-hover:scale-110 transition-transform"></i>
-                        <span class="font-medium">Sección 4: Plantillas</span>
-                    </a>
-
-                    <a href="#seccion-5" class="nav-item flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800/70 transition group">
-                        <i class="fa-solid fa-chart-line text-amber-400 group-hover:scale-110 transition-transform"></i>
-                        <span class="font-medium">Sección 5: Métricas</span>
-                    </a>
-                </nav>
-
-                <div class="mt-6 pt-4 border-t border-slate-800">
-                    <div class="bg-amber-500/10 border border-amber-500/20 rounded-xl p-3 text-[11px] text-amber-200/90">
-                        <p class="font-semibold flex items-center gap-1.5 mb-1 text-amber-400">
-                            <i class="fa-solid fa-circle-info"></i> Modo Canvas Activo
-                        </p>
-                        <p class="text-slate-400 leading-relaxed">Documento dinámico optimizado para moderación en directo en Discord.</p>
-                    </div>
-                </div>
-            </div>
-        </aside>
-
-        <!-- Main Document Canvas -->
-        <main class="flex-1 min-w-0 space-y-12">
-
-            <!-- Hero Intro Banner -->
-            <div class="bg-gradient-to-r from-slate-900 via-indigo-950/40 to-slate-900 border border-slate-800 rounded-2xl p-6 md:p-8 shadow-2xl relative overflow-hidden">
-                <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
-                <div class="relative z-10">
-                    <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-amber-400/10 text-amber-400 border border-amber-400/20 mb-3">
-                        <i class="fa-solid fa-scroll"></i> Documento Oficial de Moderación
-                    </span>
-                    <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight leading-tight">
-                        MANUAL DE MODERACIÓN Y PROTOCOLO DE CONVIVENCIA EN DISCORD
-                    </h1>
-                    <p class="text-sm sm:text-base text-amber-400/90 font-semibold mt-2">
-                        Comunidad Virtual: Brawl Stars King's
-                    </p>
-                </div>
-            </div>
-
-            <!-- SECCIÓN 1: IDENTIDAD DE LA COMUNIDAD -->
-            <section id="seccion-1" class="scroll-mt-24 space-y-6">
-                <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
-                    <div class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-sm">1</div>
-                    <h2 class="text-xl font-bold text-white tracking-wide">SECCIÓN 1: IDENTIDAD DE LA COMUNIDAD</h2>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-1">
-                        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Nombre de la comunidad</span>
-                        <p class="text-base font-bold text-white flex items-center gap-2">
-                            Brawl Stars King's <i class="fa-solid fa-crown text-amber-400 text-xs"></i>
-                        </p>
-                    </div>
-
-                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-1">
-                        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Plataforma exclusiva</span>
-                        <p class="text-sm font-medium text-slate-200">
-                            Discord (servidor dedicado con categorías de texto y voz para LFG, análisis de Esports, memes y organización de torneos).
-                        </p>
-                    </div>
-
-                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-1 md:col-span-2">
-                        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Propósito principal</span>
-                        <p class="text-sm text-slate-300 leading-relaxed">
-                            Crear un espacio hispanohablante competitivo e inclusivo para jugadores de Brawl Stars, enfocado en la búsqueda de compañeros para subir copas o completar desafíos (canales LFG y voz), el análisis del meta competitivo (Brawl Stars Esports), el entretenimiento mediante contenido original/memes, y la organización de torneos amateurs internos dentro del servidor de Discord.
-                        </p>
-                    </div>
-
-                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-1">
-                        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Miembros típicos</span>
-                        <p class="text-sm text-slate-300 leading-relaxed">
-                            Jugadores de entre 14 y 28 años, hispanohablantes, entusiastas del trabajo en equipo que buscan mejorar su nivel, mantenerse informados sobre eventos oficiales y encontrar compañeros estables sin lidiar con la toxicidad del emparejamiento aleatorio (bad randoms).
-                        </p>
-                    </div>
-
-                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-1">
-                        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Tamaño aproximado</span>
-                        <p class="text-sm font-medium text-amber-300 flex items-center gap-2">
-                            <span class="w-2 h-2 rounded-full bg-emerald-400 inline-block animate-pulse"></span>
-                            Pequeña (hasta 100 miembros activos en fase de consolidación).
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Filosofía de moderación Callout -->
-                <div class="bg-gradient-to-r from-indigo-950/50 via-slate-900 to-slate-900 border-l-4 border-amber-400 border-y border-r border-slate-800 rounded-r-xl p-5 shadow-lg">
-                    <h3 class="text-xs font-bold uppercase tracking-wider text-amber-400 mb-2 flex items-center gap-2">
-                        <i class="fa-solid fa-compass"></i> Filosofía de moderación
-                    </h3>
-                    <p class="text-sm italic text-slate-200 leading-relaxed">
-                        En Brawl Stars King's fomentamos un ambiente dinámico, divertido e inclusivo para compartir contenido y formar equipos de juego en Discord, aplicando tolerancia cero frente a las estafas, el juego sucio y la toxicidad destructiva. Moderamos con un enfoque pedagógico para guiar a los miembros nuevos, pero actuamos con firmeza e inmediatez mediante las herramientas de Discord cuando se vulnera el respeto, la deportividad o la seguridad de la comunidad.
-                    </p>
-                </div>
-            </section>
-
-            <!-- SECCIÓN 2: LAS NORMAS Y SUS CONSECUENCIAS -->
-            <section id="seccion-2" class="scroll-mt-24 space-y-8">
-                <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
-                    <div class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-sm">2</div>
-                    <h2 class="text-xl font-bold text-white tracking-wide">SECCIÓN 2: LAS NORMAS Y SUS CONSECUENCIAS</h2>
-                </div>
-
-                <div class="space-y-6">
-                    <h3 class="text-sm font-bold tracking-wider text-slate-400 uppercase flex items-center gap-2">
-                        <i class="fa-solid fa-list-check text-amber-400"></i> Reglas de Convivencia
-                    </h3>
-
-                    <!-- NORMA 1 -->
-                    <div id="norma-1" class="scroll-mt-24 bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 space-y-4 hover:border-slate-700 transition">
-                        <div class="flex items-start justify-between gap-4">
-                            <span class="inline-block px-3 py-1 bg-amber-500/10 text-amber-400 border border-amber-500/30 rounded-lg text-xs font-extrabold">
-                                Norma 1
-                            </span>
-                            <span class="text-xs text-slate-400 font-medium">Categoría: LFG & Voz</span>
-                        </div>
-
-                        <h4 class="text-lg font-bold text-white">Deportividad y respeto en salas de búsqueda de equipo (LFG y Canales de Voz)</h4>
-                        
-                        <p class="text-sm text-slate-300 leading-relaxed">
-                            Está permitido señalar errores tácticos de forma constructiva tras una partida, pero está strictly prohibido insultar, culpar de forma agresiva o acosar a compañeros de equipo por su rendimiento o por cometer fallos en el juego dentro de los canales de texto o voz de Discord.
-                        </p>
-
-                        <!-- Highlighted Examples -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-                            <!-- Ejemplo permitido (GREEN) -->
-                            <div class="bg-emerald-950/30 border border-emerald-500/40 rounded-xl p-4 space-y-2">
-                                <div class="flex items-center gap-2 text-emerald-400 font-bold text-xs uppercase tracking-wider">
-                                    <i class="fa-solid fa-circle-check text-sm"></i> Ejemplo permitido
-                                </div>
-                                <p class="text-xs sm:text-sm text-emerald-100/90 italic font-mono bg-emerald-950/50 p-2.5 rounded-lg border border-emerald-500/20">
-                                    "En la última partida nos faltó control de zona en el centro. Te sugiero usar un Brawler con mayor rango para la próxima."
-                               
+</body>
+</html>
